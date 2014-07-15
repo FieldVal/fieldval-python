@@ -33,6 +33,24 @@ validator = FieldVal(validating)
 validator.get('test', bval.Integer(parse=True))
 print validator.end()
 
+#Bool validation
+validating = dict(test='True')
+validator = FieldVal(validating)
+validator.get('test', bval.Boolean(parse=True))
+print validator.end()
+
+#List validation
+validating = dict(test=[1, 2, 3])
+validator = FieldVal(validating)
+validator.get('test', bval.List())
+print validator.end()
+
+#Dict validation
+validating = dict(test=dict(key=123))
+validator = FieldVal(validating)
+validator.get('test', bval.Dict())
+print validator.end()
+
 
 #Custom check
 class SortedNumbers(FVCheck):

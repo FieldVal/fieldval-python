@@ -14,6 +14,23 @@ class String(FVCheck):
             return dict(error=FieldVal.INCORRECT_FIELD_TYPE, error_message='Incorrect field type')
 
 
+class Boolean(FVCheck):
+
+    def check(self, value):
+        parse = self.args.get('parse', False)
+
+        if type(value) == bool:
+            return
+
+        if not parse:
+            return dict(error=FieldVal.INCORRECT_FIELD_TYPE, error_message='Incorrect field type')
+
+        try:
+            self.assign_new_value(bool(value))
+        except:
+            return dict(error=FieldVal.INCORRECT_FIELD_TYPE, error_message='Incorrect field type')
+
+
 class Integer(FVCheck):
 
     @staticmethod
@@ -39,4 +56,11 @@ class List(FVCheck):
 
     def check(self, value):
         if type(value) != list:
+            return dict(error=FieldVal.INCORRECT_FIELD_TYPE, error_message='Incorrect field type')
+
+
+class Dict(FVCheck):
+
+    def check(self, value):
+        if type(value) != dict:
             return dict(error=FieldVal.INCORRECT_FIELD_TYPE, error_message='Incorrect field type')
