@@ -62,6 +62,7 @@ class FieldVal(object):
             else:
                 self.invalid[field_name] = error
                 break
+        return value
 
     def end(self):
         returning = dict()
