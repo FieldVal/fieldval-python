@@ -33,3 +33,10 @@ class Integer(FVCheck):
             self.assign_new_value(int(value))
         except:
             return dict(error=FieldVal.INCORRECT_FIELD_TYPE, error_message='Incorrect field type')
+
+
+class List(FVCheck):
+
+    def check(self, value):
+        if type(value) != list:
+            return dict(error=FieldVal.INCORRECT_FIELD_TYPE, error_message='Incorrect field type')
