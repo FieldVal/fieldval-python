@@ -4,16 +4,7 @@ class FVCheck(object):
         self.new_value = None
         self.args = kwargs
 
-    def assign_new_value(self, new_value):
-        self.new_value = new_value
-
-    def is_new_value_assigned(self):
-        return self.new_value is not None
-
-    def get_new_value(self):
-        return self.new_value
-
-    def check(self, value):
+    def check(self, value, args):
         raise NotImplementedError('check method needs to overridden')
 
 
@@ -44,12 +35,14 @@ class FieldVal(object):
         value = self.validating.get(field_name, None)
 
         for check in checks:
-            error = check.check(value)
-            if error is None:
-                if check.is_new_value_assigned():
-                    value = check.get_new_value()
+            response = check.check(value)
 
+            if type(response) == tuple:
+                error, value = response
             else:
+                error = response
+
+            if error is not None:
                 if error == FieldVal.REQUIRED_ERROR:
                     self.missing[field_name] = error
                     continue

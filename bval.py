@@ -38,7 +38,7 @@ class Boolean(TypeFVCheck):
             return dict(error=FieldVal.INCORRECT_FIELD_TYPE, error_message='Incorrect field type')
 
         try:
-            self.assign_new_value(bool(value))
+            return None, bool(value)
         except:
             return dict(error=FieldVal.INCORRECT_FIELD_TYPE, error_message='Incorrect field type')
 
@@ -53,13 +53,14 @@ class Integer(TypeFVCheck):
         parse = self.args.get('parse', False)
 
         if Integer.is_int(value):
+            print 'integer returned', value
             return
 
         if not parse:
             return dict(error=FieldVal.INCORRECT_FIELD_TYPE, error_message='Incorrect field type')
 
         try:
-            self.assign_new_value(int(value))
+            return None, int(value)
         except:
             return dict(error=FieldVal.INCORRECT_FIELD_TYPE, error_message='Incorrect field type')
 
@@ -76,7 +77,7 @@ class Float(TypeFVCheck):
             return dict(error=FieldVal.INCORRECT_FIELD_TYPE, error_message='Incorrect field type')
 
         try:
-            self.assign_new_value(float(value))
+            return None, float(value)
         except:
             return dict(error=FieldVal.INCORRECT_FIELD_TYPE, error_message='Incorrect field type')
 
