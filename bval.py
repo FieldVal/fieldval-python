@@ -64,6 +64,23 @@ class Integer(TypeFVCheck):
             return dict(error=FieldVal.INCORRECT_FIELD_TYPE, error_message='Incorrect field type')
 
 
+class Float(TypeFVCheck):
+
+    def type_check(self, value):
+        parse = self.args.get('parse', False)
+
+        if type(value) == float:
+            return
+
+        if not parse:
+            return dict(error=FieldVal.INCORRECT_FIELD_TYPE, error_message='Incorrect field type')
+
+        try:
+            self.assign_new_value(float(value))
+        except:
+            return dict(error=FieldVal.INCORRECT_FIELD_TYPE, error_message='Incorrect field type')
+
+
 class List(TypeFVCheck):
 
     def type_check(self, value):
