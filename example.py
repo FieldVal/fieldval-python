@@ -7,6 +7,11 @@ validator = FieldVal(validating)
 validator.get('missing_field', bval.String())
 print validator.end()
 
+validating = dict(unrecognized_field='123')
+validator = FieldVal(validating)
+validator.get('missing_field', bval.String(required=False))
+print validator.end()
+
 #Incorrect type
 validating = dict(test='123')
 validator = FieldVal(validating)
@@ -86,7 +91,7 @@ class ListOfIntegers(FVCheck):
 
 validating = dict(test='1 2 3 4 5 6 7 8 9 10')
 validator = FieldVal(validating)
-validator.get('test', bval.String(), ListOfIntegers(), SortedNumbers(ascending=True))
+field = validator.get('test', bval.String(), ListOfIntegers(), SortedNumbers(ascending=True))
 print validator.end()
 
 

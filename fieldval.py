@@ -1,8 +1,6 @@
 class FVCheck(object):
 
-    def __init__(self, required=True, stop_on_error=True, **kwargs):
-        self.required = required
-        self.stop_on_error = stop_on_error
+    def __init__(self, **kwargs):
         self.new_value = None
         self.args = kwargs
 
@@ -21,14 +19,14 @@ class FVCheck(object):
 
 class FieldVal(object):
 
-    REQUIRED_ERROR = "required"
-    NOT_REQUIRED_BUT_MISSING = "notrequired"
-
     ONE_OR_MORE_ERRORS = 0
     FIELD_MISSING = 1
     INCORRECT_FIELD_TYPE = 2
     FIELD_UNRECOGNIZED = 3
     MULTIPLE_ERRORS = 4
+
+    REQUIRED_ERROR = dict(error=FIELD_MISSING, error_message='Field is missing')
+    NOT_REQUIRED_BUT_MISSING = "notrequired"
 
     def __init__(self, validating):
         self.validating = validating
@@ -38,30 +36,29 @@ class FieldVal(object):
         self.recognized = []
 
     def add_to_unrecognized(self, key):
-        self.unrecognized[key] = dict(error=FieldVal.FIELD_UNRECOGNIZED, error_message='Unrecognized filed')
-
-    def add_to_missing(self, key):
-        self.missing[key] = dict(error=FieldVal.FIELD_MISSING, error_message='Field is missing')
+        self.unrecognized[key] = dict(error=FieldVal.FIELD_UNRECOGNIZED, error_message='Unrecognized field')
 
     def get(self, field_name, *checks):
         self.recognized.append(field_name)
 
-        if field_name not in self.validating:
-            self.add_to_missing(field_name)
-            return
-
-        value = self.validating[field_name]
+        value = self.validating.get(field_name, None)
 
         for check in checks:
             error = check.check(value)
-
             if error is None:
                 if check.is_new_value_assigned():
                     value = check.get_new_value()
 
             else:
+                if error == FieldVal.REQUIRED_ERROR:
+                    self.missing[field_name] = error
+                    continue
+                elif error == FieldVal.NOT_REQUIRED_BUT_MISSING:
+                    break
+
                 self.invalid[field_name] = error
                 break
+
         return value
 
     def end(self):

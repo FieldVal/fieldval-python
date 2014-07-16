@@ -3,20 +3,37 @@ from fieldval import FVCheck, FieldVal
 __author__ = 'stan'
 
 
-class String(FVCheck):
+def check_if_missing(value, required):
 
-    @staticmethod
-    def is_string(value):
-        return type(value) in [unicode, str]
+    return None
 
+
+class TypeFVCheck(FVCheck):
+    
     def check(self, value):
-        if not String.is_string(value):
+        if value is None:
+            required = self.args.get('required', True)
+            if required:
+                return FieldVal.REQUIRED_ERROR
+            else:
+                return FieldVal.NOT_REQUIRED_BUT_MISSING
+
+        return self.type_check(value)
+    
+    def type_check(self, value):
+        raise NotImplementedError('check method needs to overridden')
+
+
+class String(TypeFVCheck):
+
+    def type_check(self, value):
+        if type(value) not in [str, unicode]:
             return dict(error=FieldVal.INCORRECT_FIELD_TYPE, error_message='Incorrect field type')
 
 
-class Boolean(FVCheck):
+class Boolean(TypeFVCheck):
 
-    def check(self, value):
+    def type_check(self, value):
         parse = self.args.get('parse', False)
 
         if type(value) == bool:
@@ -31,13 +48,18 @@ class Boolean(FVCheck):
             return dict(error=FieldVal.INCORRECT_FIELD_TYPE, error_message='Incorrect field type')
 
 
-class Integer(FVCheck):
+class Integer(TypeFVCheck):
 
     @staticmethod
     def is_int(value):
         return type(value) == int
 
-    def check(self, value):
+    def type_check(self, value):
+        required = self.args.get('required', True)
+        error = check_if_missing(value, required)
+        if error:
+            return error
+        
         parse = self.args.get('parse', False)
 
         if Integer.is_int(value):
@@ -52,15 +74,25 @@ class Integer(FVCheck):
             return dict(error=FieldVal.INCORRECT_FIELD_TYPE, error_message='Incorrect field type')
 
 
-class List(FVCheck):
+class List(TypeFVCheck):
 
-    def check(self, value):
+    def type_check(self, value):
+        required = self.args.get('required', True)
+        error = check_if_missing(value, required)
+        if error:
+            return error
+        
         if type(value) != list:
             return dict(error=FieldVal.INCORRECT_FIELD_TYPE, error_message='Incorrect field type')
 
 
-class Dict(FVCheck):
+class Dict(TypeFVCheck):
 
-    def check(self, value):
+    def type_check(self, value):
+        required = self.args.get('required', True)
+        error = check_if_missing(value, required)
+        if error:
+            return error
+        
         if type(value) != dict:
             return dict(error=FieldVal.INCORRECT_FIELD_TYPE, error_message='Incorrect field type')
