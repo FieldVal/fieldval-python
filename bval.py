@@ -3,11 +3,6 @@ from fieldval import FVCheck, FieldVal
 __author__ = 'stan'
 
 
-def check_if_missing(value, required):
-
-    return None
-
-
 class TypeFVCheck(FVCheck):
     
     def check(self, value):
@@ -55,11 +50,6 @@ class Integer(TypeFVCheck):
         return type(value) == int
 
     def type_check(self, value):
-        required = self.args.get('required', True)
-        error = check_if_missing(value, required)
-        if error:
-            return error
-        
         parse = self.args.get('parse', False)
 
         if Integer.is_int(value):
@@ -77,11 +67,6 @@ class Integer(TypeFVCheck):
 class List(TypeFVCheck):
 
     def type_check(self, value):
-        required = self.args.get('required', True)
-        error = check_if_missing(value, required)
-        if error:
-            return error
-        
         if type(value) != list:
             return dict(error=FieldVal.INCORRECT_FIELD_TYPE, error_message='Incorrect field type')
 
@@ -89,10 +74,5 @@ class List(TypeFVCheck):
 class Dict(TypeFVCheck):
 
     def type_check(self, value):
-        required = self.args.get('required', True)
-        error = check_if_missing(value, required)
-        if error:
-            return error
-        
         if type(value) != dict:
             return dict(error=FieldVal.INCORRECT_FIELD_TYPE, error_message='Incorrect field type')
