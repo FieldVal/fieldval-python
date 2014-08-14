@@ -45,7 +45,7 @@ class FieldVal(object):
             if error is not None:
                 if error == FieldVal.REQUIRED_ERROR:
                     self.missing[field_name] = error
-                    continue
+                    break
                 elif error == FieldVal.NOT_REQUIRED_BUT_MISSING:
                     break
 
