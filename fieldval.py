@@ -10,11 +10,11 @@ class FVCheck(object):
 
 class FieldVal(object):
 
-    ONE_OR_MORE_ERRORS = 0
     FIELD_MISSING = 1
     INCORRECT_FIELD_TYPE = 2
     FIELD_UNRECOGNIZED = 3
     MULTIPLE_ERRORS = 4
+    ONE_OR_MORE_ERRORS = 5
 
     REQUIRED_ERROR = dict(error=FIELD_MISSING, error_message='Field is missing')
     NOT_REQUIRED_BUT_MISSING = "notrequired"
