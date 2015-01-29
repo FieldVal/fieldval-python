@@ -53,7 +53,6 @@ class Integer(TypeFVCheck):
         parse = self.args.get('parse', False)
 
         if Integer.is_int(value):
-            print 'integer returned', value
             return
 
         if not parse:
